@@ -9,9 +9,10 @@ variable "vpn_type" {
 
 variable "client_endpoints" {
   description = "Configuration object indicating vpn endpoint setup."
-  type = list(object({
+  type = map(object({
       description : string
       client_cidr_block : string
+      target_cidr_block : string
       server_certificate_arn : string
       client_certificate_arn : string
       subnet_id : string
