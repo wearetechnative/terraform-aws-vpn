@@ -2,6 +2,7 @@ resource "aws_ec2_client_vpn_endpoint" "client_vpn" {
   for_each = { for key, value in var.client_endpoint_vpn : key => value }
   server_certificate_arn = each.value.server_certificate_arn
   client_cidr_block      = each.value.client_cidr_block
+  security_group_ids =  [aws_security_group.client_vpn.id]
 
   authentication_options {
     type                       = "certificate-authentication"
@@ -36,4 +37,28 @@ resource "aws_ec2_client_vpn_route" "client_vpn" {
   client_vpn_endpoint_id = aws_ec2_client_vpn_endpoint.client_vpn[each.key].id
   destination_cidr_block = each.value.target_cidr_block
   target_vpc_subnet_id   = each.value.subnet_id
+}
+
+resource "aws_security_group" "client_vpn" {
+  name        = "Actiflow-ClientVPN-SG"
+  description = "Access to AWS VPC for Actiflow personnel"
+  vpc_id      = aws_vpc.hpc.id
+}
+
+resource "aws_security_group_rule" "ingress" {
+  type              = "ingress"
+  from_port         = 0
+  to_port           = 65535
+  protocol          = "tcp"
+  cidr_blocks       = ["172.16.0.0/22"]
+  security_group_id = aws_security_group.vpn.id
+}
+
+resource "aws_security_group_rule" "egress" {
+  type              = "egress"
+  from_port         = 0
+  to_port           = 65535
+  protocol          = "tcp"
+  cidr_blocks       = ["0.0.0.0/0"]
+  security_group_id = aws_security_group.vpn.id
 }

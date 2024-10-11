@@ -87,12 +87,12 @@ module "vpn" {
   source = "git@github.com:wearetechnative/terraform-aws-vpn.git"
   
   client_endpoint_vpn = {
-    john = {      ### created resources will get this name in console
+    john = {                                 ### created resources will get this name in console
       client_cidr_block = "10.5.0.0/16"
-      target_cidr_block = "0.0.0.0/0"
+      target_cidr_block = "0.0.0.0/0"        ### You can give access to a smaller ip pool if you'd like
       server_certificate_arn = "arn:aws:acm:eu-central-1:123123123123:certificate/02f386fe-b591-4901-8e33-5c0b40e15ffe"
       client_certificate_arn = "arn:aws:acm:eu-central-1:123123123123:certificate/b5a0b0b8-65d0-49ff-9f4c-b53ef7e82edb"
-      subnet_id = "subnet-02d09b7d1dd3d0e31"
+      subnet_id = "subnet-02d09b7d1dd3d0e31" ### Subnet to 
     }  
   }
 
@@ -106,13 +106,6 @@ module "vpn" {
   }
 }
 ```
-
-### Add route to VPC main route table 
-In the VPC where the virtual private gateway is located, add a route to the main route table of the VPC
-where:
-
-Destination: your local subnet
-Target: the virtual private gateway id
 
 <!-- BEGIN_TF_DOCS -->
 <!-- END_TF_DOCS -->
