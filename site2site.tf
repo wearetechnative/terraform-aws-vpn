@@ -32,5 +32,5 @@ resource "aws_vpn_connection" "s2s" {
 resource "aws_vpn_connection_route" "s2s" {
   for_each = { for key, value in var.site_to_site_vpn : key => value }
   destination_cidr_block = each.value.destination_cidr_block
-  vpn_connection_id      = aws_vpn_connection.main.id
+  vpn_connection_id      = aws_vpn_connection.s2s[each.key].id
 }
