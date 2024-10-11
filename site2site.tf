@@ -38,6 +38,10 @@ resource "aws_vpn_connection_route" "s2s" {
 data "aws_route_table" "s2s" {
   for_each = { for key, value in var.site_to_site_vpn : key => value }
   vpc_id   = each.value.vpc_id
+  filter {
+    name = "association.main"
+    values = [true]
+  }
 }
 
 resource "aws_route" "route" {
