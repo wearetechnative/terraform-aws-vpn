@@ -1,5 +1,5 @@
 resource "aws_ec2_client_vpn_endpoint" "client_vpn" {
-  for_each = { for key, value in var.client_endpoint_vpn : key => value if var.vpn_type == "client_endpoint" || var.vpn_type == "both" }
+  for_each = { for key, value in var.client_endpoint_vpn : key => value }
   server_certificate_arn = each.value.server_certificate_arn
   client_cidr_block      = each.value.client_cidr_block
 
@@ -19,20 +19,20 @@ resource "aws_ec2_client_vpn_endpoint" "client_vpn" {
 }
 
 resource "aws_ec2_client_vpn_network_association" "client_vpn" {
-  for_each = { for key, value in var.client_endpoint_vpn : key => value if var.vpn_type == "client_endpoint" || var.vpn_type == "both" }
+  for_each = { for key, value in var.client_endpoint_vpn : key => value }
   client_vpn_endpoint_id = aws_ec2_client_vpn_endpoint.client_vpn[each.key].id
   subnet_id              = each.value.subnet_id
 }
 
 resource "aws_ec2_client_vpn_authorization_rule" "client_vpn" {
-  for_each = { for key, value in var.client_endpoint_vpn : key => value if var.vpn_type == "client_endpoint" || var.vpn_type == "both" }
+  for_each = { for key, value in var.client_endpoint_vpn : key => value }
   client_vpn_endpoint_id = aws_ec2_client_vpn_endpoint.client_vpn[each.key].id
   target_network_cidr    = each.value.target_cidr_block
   authorize_all_groups   = true
 }
 
 resource "aws_ec2_client_vpn_route" "client_vpn" {
-  for_each = { for key, value in var.client_endpoint_vpn : key => value if var.vpn_type == "client_endpoint" || var.vpn_type == "both" }
+  for_each = { for key, value in var.client_endpoint_vpn : key => value }
   client_vpn_endpoint_id = aws_ec2_client_vpn_endpoint.client_vpn[each.key].id
   destination_cidr_block = each.value.target_cidr_block
   target_vpc_subnet_id   = each.value.subnet_id

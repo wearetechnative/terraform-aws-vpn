@@ -83,8 +83,27 @@ See [pre-commit installation](https://pre-commit.com/#install) on how to install
 To use this module ...
 
 ```hcl
-{
-  some_conf = "might need explanation"
+module "vpn" {
+  source = "git@github.com:wearetechnative/terraform-aws-vpn.git"
+  
+  client_endpoint_vpn = {
+    john = {      ### created resources will get this name in console
+      client_cidr_block = "10.5.0.0/16"
+      target_cidr_block = "0.0.0.0/0"
+      server_certificate_arn = "arn:aws:acm:eu-central-1:123123123123:certificate/02f386fe-b591-4901-8e33-5c0b40e15ffe"
+      client_certificate_arn = "arn:aws:acm:eu-central-1:123123123123:certificate/b5a0b0b8-65d0-49ff-9f4c-b53ef7e82edb"
+      subnet_id = "subnet-02d09b7d1dd3d0e31"
+    }  
+  }
+
+  site_to_site_vpn = {
+    office = {
+      customer_ip = "123.123.123.123"      ### public ip of your device (ISP)
+      type = "ipsec.1"
+      vpc_id = "vpc-09fc27ba33099891e"
+      
+    }
+  }
 }
 ```
 
