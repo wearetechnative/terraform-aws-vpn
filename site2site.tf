@@ -34,3 +34,15 @@ resource "aws_vpn_connection_route" "s2s" {
   destination_cidr_block = each.value.destination_cidr_block
   vpn_connection_id      = aws_vpn_connection.s2s[each.key].id
 }
+
+data "aws_route_table" "s2s" {
+  for_each = { for key, value in var.site_to_site_vpn : key => value }
+  vpc_id = each.value.vpc_id
+}
+
+resource "aws_route" "route" {
+  for_each = { for key, value in var.site_to_site_vpn : key => value }
+  route_table_id            = data.aws_route_table.s2s[each.key].id
+  destination_cidr_block    = each.value.destination_cidr_block
+  gateway_id = aws_vpn_gateway.s2s[each.key].id
+}
