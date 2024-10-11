@@ -43,7 +43,7 @@ resource "aws_security_group" "client_vpn" {
   for_each    = { for key, value in var.client_endpoint_vpn : key => value }
   name        = "Actiflow-ClientVPN-SG"
   description = "Access to AWS VPC for Actiflow personnel"
-  vpc_id      = aws_vpc.hpc.id
+  vpc_id      = each.value.vpc_id
 }
 
 resource "aws_security_group_rule" "ingress" {
