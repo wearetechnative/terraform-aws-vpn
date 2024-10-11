@@ -107,5 +107,10 @@ module "vpn" {
 }
 ```
 
+### Add route to VPC main route table where the virtual gateway is located
+
+Destination: your local subnet
+Target is the virtual gateway id
+
 <!-- BEGIN_TF_DOCS -->
 <!-- END_TF_DOCS -->
