@@ -53,7 +53,7 @@ resource "aws_security_group_rule" "ingress" {
   to_port           = 65535
   protocol          = "tcp"
   cidr_blocks       = ["172.16.0.0/22"]
-  security_group_id = aws_security_group.vpn.id
+  security_group_id = aws_security_group.client_vpn[each.key].id
 }
 
 resource "aws_security_group_rule" "egress" {
@@ -63,5 +63,5 @@ resource "aws_security_group_rule" "egress" {
   to_port           = 65535
   protocol          = "tcp"
   cidr_blocks       = ["0.0.0.0/0"]
-  security_group_id = aws_security_group.vpn.id
+  security_group_id = aws_security_group.client_vpn[each.key].id
 }
