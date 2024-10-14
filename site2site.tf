@@ -28,9 +28,9 @@ resource "aws_vpn_connection" "s2s" {
 }
 
 resource "aws_vpn_connection_route" "s2s" {
-  count = var.vpn_type == "site_to_site" ? 1 : 0
-  destination_cidr_block = var.destination_cidr_block
-  vpn_connection_id      = aws_vpn_connection.s2s[count.index].id
+  count = var.vpn_type == "site_to_site" ? length(var.destination_cidr_block) : 0
+  destination_cidr_block = var.destination_cidr_block[count.index]
+  vpn_connection_id      = aws_vpn_connection.s2s[0].id
 }
 
 data "aws_route_table" "s2s" {
@@ -43,8 +43,9 @@ data "aws_route_table" "s2s" {
 }
 
 resource "aws_route" "route" {
-  count = var.vpn_type == "site_to_site" ? 1 : 0
-  route_table_id         = data.aws_route_table.s2s[count.index].id
-  destination_cidr_block = var.destination_cidr_block
-  gateway_id             = aws_vpn_gateway.s2s[count.index].id
+  count = var.vpn_type == "site_to_site" ? length(var.destination_cidr_block) : 0
+  route_table_id         = data.aws_route_table.s2s[0].id
+  destination_cidr_block = var.destination_cidr_block[count.index]
+  gateway_id             = aws_vpn_gateway.s2s[0].id
 }
+
