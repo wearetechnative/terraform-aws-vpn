@@ -78,6 +78,6 @@ variable "s2s_vpc_id" {
 variable "destination_cidr_block" {
   description = "The CIDR block associated with the local subnet of the customer network"
   default = null
-  type = string
+  type = list(string)
 }
 
