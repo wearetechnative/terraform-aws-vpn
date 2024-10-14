@@ -102,6 +102,7 @@ module "vpn" {
       customer_ip = "123.123.123.123"      ### public ip of your device (ISP)
       type = "ipsec.1"
       vpc_id = "vpc-09fc27ba33099891e"
+      destination_cidr_block = '10.0.0.0/24"
       
     }
   }

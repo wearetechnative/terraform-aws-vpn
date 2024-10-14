@@ -1,43 +1,42 @@
 resource "aws_customer_gateway" "s2s" {
-  for_each   = { for key, value in var.site_to_site_vpn : key => value }
-  bgp_asn    = 65000
-  ip_address = each.value.customer_ip
-  type       = each.value.type
+  count = var.vpn_type == "site_to_site" ? 1 : 0
+  ip_address = var.s2s_customer_ip
+  type       = var.tunnel_type
 
-  tags = {
-    Name = each.key
-  }
+  # tags = {
+  #   Name = each.key
+  # }
 }
 
 resource "aws_vpn_gateway" "s2s" {
-  for_each = { for key, value in var.site_to_site_vpn : key => value }
+  count = var.vpn_type == "site_to_site" ? 1 : 0
   vpc_id   = each.value.vpc_id
 
-  tags = {
-    Name = each.key
-  }
+  # tags = {
+  #   Name = each.key
+  # }
 }
 
 resource "aws_vpn_connection" "s2s" {
-  for_each            = { for key, value in var.site_to_site_vpn : key => value }
-  vpn_gateway_id      = aws_vpn_gateway.s2s[each.key].id
-  customer_gateway_id = aws_customer_gateway.s2s[each.key].id
-  type                = each.value.type
+  count = var.vpn_type == "site_to_site" ? 1 : 0
+  vpn_gateway_id      = aws_vpn_gateway.s2s.id
+  customer_gateway_id = aws_customer_gateway.s2s.id
+  type                = var.tunnel_type
   static_routes_only  = true
-  tags = {
-    Name = each.key
-  }
+  # tags = {
+  #   Name = each.key
+  # }
 }
 
 resource "aws_vpn_connection_route" "s2s" {
-  for_each               = { for key, value in var.site_to_site_vpn : key => value }
-  destination_cidr_block = each.value.destination_cidr_block
-  vpn_connection_id      = aws_vpn_connection.s2s[each.key].id
+  count = var.vpn_type == "site_to_site" ? 1 : 0
+  destination_cidr_block = var.destination_cidr_block
+  vpn_connection_id      = aws_vpn_connection.s2s.id
 }
 
 data "aws_route_table" "s2s" {
-  for_each = { for key, value in var.site_to_site_vpn : key => value }
-  vpc_id   = each.value.vpc_id
+  count = var.vpn_type == "site_to_site" ? 1 : 0
+  vpc_id   = var.vpc_id
   filter {
     name = "association.main"
     values = [true]
@@ -45,8 +44,8 @@ data "aws_route_table" "s2s" {
 }
 
 resource "aws_route" "route" {
-  for_each               = { for key, value in var.site_to_site_vpn : key => value }
-  route_table_id         = data.aws_route_table.s2s[each.key].id
-  destination_cidr_block = each.value.destination_cidr_block
-  gateway_id             = aws_vpn_gateway.s2s[each.key].id
+  for_each               = toset(var.destination_cidr_block)
+  route_table_id         = data.aws_route_table.s2s.id
+  destination_cidr_block = each.key
+  gateway_id             = aws_vpn_gateway.s2s.id
 }
