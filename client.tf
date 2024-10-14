@@ -14,9 +14,9 @@ resource "aws_ec2_client_vpn_endpoint" "client_vpn" {
     # cloudwatch_log_group  = aws_cloudwatch_log_group.lg.name
     # cloudwatch_log_stream = aws_cloudwatch_log_stream.ls.name
   }
-  # tags = {
-  #   Name = each.key
-  # }
+  tags = {
+    Name = var.name
+  }
 }
 
 resource "aws_ec2_client_vpn_network_association" "client_vpn" {
@@ -44,6 +44,9 @@ resource "aws_security_group" "client_vpn" {
   name        = "Actiflow-ClientVPN-SG"
   description = "Access to AWS VPC for Actiflow personnel"
   vpc_id      = var.vpc_id
+  tags = {
+    Name = var.name
+  }
 }
 
 resource "aws_security_group_rule" "ingress" {

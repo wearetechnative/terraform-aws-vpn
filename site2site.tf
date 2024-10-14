@@ -3,11 +3,17 @@ resource "aws_customer_gateway" "s2s" {
   ip_address = var.customer_ip
   type       = var.tunnel_type
   bgp_asn = var.bgp_asn
+  tags = {
+    Name = var.name
+  }
 }
 
 resource "aws_vpn_gateway" "s2s" {
   count = var.vpn_type == "site_to_site" ? 1 : 0
   vpc_id   = var.s2s_vpc_id
+  tags = {
+    Name = var.name
+  }
 }
 
 resource "aws_vpn_connection" "s2s" {
@@ -16,6 +22,9 @@ resource "aws_vpn_connection" "s2s" {
   customer_gateway_id = aws_customer_gateway.s2s[count.index].id
   type                = var.tunnel_type
   static_routes_only  = true
+  tags = {
+    Name = var.name
+  }
 }
 
 resource "aws_vpn_connection_route" "s2s" {

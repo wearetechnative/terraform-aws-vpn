@@ -4,8 +4,14 @@ variable "vpn_type" {
     error_message = "Value can only be: \"client_endpoint\", \"site_to_site\"."
     condition = contains(["client_endpoint", "site_to_site"], var.vpn_type) 
   }
-  
 }
+
+variable "name" {
+  description = "Naming for the resources in the console"
+  type = string
+}
+
+## Client endpoint
 
 variable "client_cidr_block" {
   description = "The IPv4 address range, in CIDR notation, from which to assign client IP addresses."
@@ -43,6 +49,7 @@ variable "subnet_id" {
   type = string
 }
 
+## Site to site
     
 variable "customer_ip" {
   description = "The IPv4 address for the customer gateway device's outside interface."
