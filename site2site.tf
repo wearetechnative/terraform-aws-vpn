@@ -7,7 +7,7 @@ resource "aws_customer_gateway" "s2s" {
 
 resource "aws_vpn_gateway" "s2s" {
   count = var.vpn_type == "site_to_site" ? 1 : 0
-  vpc_id   = var.vpc_id
+  vpc_id   = var.s2s_vpc_id
 }
 
 resource "aws_vpn_connection" "s2s" {
@@ -26,7 +26,7 @@ resource "aws_vpn_connection_route" "s2s" {
 
 data "aws_route_table" "s2s" {
   count = var.vpn_type == "site_to_site" ? 1 : 0
-  vpc_id   = var.vpc_id
+  vpc_id   = var.s2s_vpc_id
   filter {
     name = "association.main"
     values = [true]
