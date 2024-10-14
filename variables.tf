@@ -1,8 +1,8 @@
 variable "vpn_type" {
-  description = "Select VPN type: client_endpoint or site_2_site"
+  description = "Select VPN type: client_endpoint or site_to_site"
   validation {
-    error_message = "Value can only be: \"client_endpoint\", \"site_2_site\"."
-    condition = contains(["client_endpoint", "site_2_site"], var.vpn_type) 
+    error_message = "Value can only be: \"client_endpoint\", \"site_to_site\"."
+    condition = contains(["client_endpoint", "site_to_site"], var.vpn_type) 
   }
   
 }
