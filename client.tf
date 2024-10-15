@@ -3,7 +3,7 @@ resource "aws_ec2_client_vpn_endpoint" "client_vpn" {
   server_certificate_arn = var.server_certificate_arn
   client_cidr_block      = var.client_cidr_block
   security_group_ids     = [aws_security_group.client_vpn[count.index].id]
-
+  vpc_id                 = var.vpc_id
   authentication_options {
     type                       = "certificate-authentication"
     root_certificate_chain_arn = var.client_certificate_arn
