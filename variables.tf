@@ -81,3 +81,9 @@ variable "destination_cidr_block" {
   type = list(string)
 }
 
+variable "dns_servers" {
+  description = " Information about the DNS servers to be used for DNS resolution. A Client VPN endpoint can have up to two DNS servers. If no DNS server is specified, the DNS address of the connecting device is used."
+  type = list(string)
+  default = null
+}
+
