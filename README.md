@@ -14,7 +14,6 @@ Run `pre-commit install` to install any guardrails implemented using pre-commit.
 
 See [pre-commit installation](https://pre-commit.com/#install) on how to install pre-commit.
 
-...
 
 ## Usage
 
