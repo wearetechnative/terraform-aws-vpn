@@ -1,4 +1,4 @@
-# Terraform AWS [vpn] ![](https://img.shields.io/github/actions/workflow/status/TechNative-B-V/terraform-aws-module-name/tflint.yaml?style=plastic)
+# Terraform AWS [vpn] ![](https://img.shields.io/github/actions/workflow/status/wearetechnative/terraform-aws-vpn/tflint.yaml?style=plastic)
 
 <!-- SHIELDS -->
 
