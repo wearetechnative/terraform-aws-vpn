@@ -2,7 +2,7 @@
 
 <!-- SHIELDS -->
 
-This module implements ...
+This module implements a secure site-2-site VPN connection.
 
 [![](we-are-technative.png)](https://www.technative.nl)
 
