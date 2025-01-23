@@ -25,20 +25,20 @@ module "vpn" {
   
   client_endpoint_vpn = {
     john = {                                 ### created resources will get this name in console
-      client_cidr_block = "10.5.0.0/16",
-      target_cidr_block = "0.0.0.0/0",        ### You can give access to a smaller ip pool if you'd like
-      server_certificate_arn = "arn:aws:acm:eu-central-1:123123123123:certificate/02f386fe-b591-4901-8e33-5c0b40e15ffe",
-      client_certificate_arn = "arn:aws:acm:eu-central-1:123123123123:certificate/b5a0b0b8-65d0-49ff-9f4c-b53ef7e82edb",
-      vpc_id = "vpc-09fc27ba33099891e",
+      client_cidr_block = "10.5.0.0/16"
+      target_cidr_block = "0.0.0.0/0"        ### You can give access to a smaller ip pool if you'd like
+      server_certificate_arn = "arn:aws:acm:eu-central-1:123123123123:certificate/02f386fe-b591-4901-8e33-5c0b40e15ffe"
+      client_certificate_arn = "arn:aws:acm:eu-central-1:123123123123:certificate/b5a0b0b8-65d0-49ff-9f4c-b53ef7e82edb"
+      vpc_id = "vpc-09fc27ba33099891e"
       subnet_id = "subnet-02d09b7d1dd3d0e31" ### Subnet to allow access to (use routes to allow access to multiple subnets)
     }  
   }
 
   site_to_site_vpn = {
     office = {
-      customer_ip = "123.123.123.123",      ### public ip of your device (ISP)
-      type = "ipsec.1",
-      vpc_id = "vpc-09fc27ba33099891e",
+      customer_ip = "123.123.123.123"      ### public ip of your device (ISP)
+      type = "ipsec.1"
+      vpc_id = "vpc-09fc27ba33099891e"
       destination_cidr_block = '10.0.0.0/24"
       
     }
