@@ -42,8 +42,8 @@ resource "aws_ec2_client_vpn_route" "client_vpn" {
 
 resource "aws_security_group" "client_vpn" {
   count = var.vpn_type == "client_endpoint" ? 1 : 0
-  name        = "Actiflow-ClientVPN-SG"
-  description = "Access to AWS VPC for Actiflow personnel"
+  name        = "ClientVPN-SG"
+  description = "Access to AWS VPC"
   vpc_id      = var.vpc_id
   tags = {
     Name = var.name
