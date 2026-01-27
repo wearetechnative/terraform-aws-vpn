@@ -49,3 +49,19 @@ resource "aws_route" "route" {
   gateway_id             = aws_vpn_gateway.s2s[0].id
 }
 
+data "aws_route_tables" "s2s" {
+  count = var.vpn_type == "site_to_site" ? 1 : 0
+  vpc_id = var.s2s_vpc_id
+  filter {
+    name   = "association.main"
+    values = ["false"]
+  }
+}
+
+
+resource "aws_route" "subnet_routes" {
+  count = length(local.s2s_route_entries)
+  route_table_id         = local.s2s_route_entries[count.index].route_table_id
+  destination_cidr_block = local.s2s_route_entries[count.index].destination_cidr_block
+  gateway_id             = aws_vpn_gateway.s2s[0].id
+}
