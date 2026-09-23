@@ -1,5 +1,6 @@
 variable "vpn_type" {
   description = "Select VPN type: client_endpoint or site_to_site"
+  type        = string
   validation {
     error_message = "Value can only be: \"client_endpoint\", \"site_to_site\"."
     condition = contains(["client_endpoint", "site_to_site"], var.vpn_type) 
@@ -65,6 +66,7 @@ variable "bgp_asn" {
 
 variable "tunnel_type" {
   description = "The type of customer gateway. The only type AWS supports at this time is \"ipsec.1\""
+  type        = string
   default = "ipsec.1"
   
 }
