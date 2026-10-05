@@ -44,10 +44,42 @@ The existing virtual private gateway mode remains the default. When
 `s2s_vpc_id`; `static_routes_only` defaults to `true` for backward
 compatibility.
 
+## Transit Gateway Site-to-Site VPN with static routes
+
+Use static routing when the remote gateway does not support BGP. Each CIDR in
+`destination_cidr_block` is added to the Transit Gateway route table with the
+VPN attachment as its target.
+
+```hcl
+module "vpn" {
+  source = "git@github.com:wearetechnative/terraform-aws-vpn.git"
+
+  vpn_type    = "site_to_site"
+  name        = "office"
+  customer_ip = "203.0.113.10"
+  bgp_asn     = 65000
+
+  transit_gateway_id             = module.transit_gateway.id
+  transit_gateway_route_table_id = module.transit_gateway.route_table_id
+
+  static_routes_only = true
+  destination_cidr_block = [
+    "10.0.0.0/21",
+  ]
+}
+```
+
+VPC subnet route tables still need matching routes with the Transit Gateway as
+their target. `enable_transit_gateway_route_propagation` applies only to BGP
+VPNs and is ignored for static TGW VPNs.
+
 <!-- BEGIN_TF_DOCS -->
 ## Requirements
 
-No requirements.
+| Name | Version |
+|------|---------|
+| <a name="requirement_terraform"></a> [terraform](#requirement\_terraform) | >= 1.1.0 |
+| <a name="requirement_aws"></a> [aws](#requirement\_aws) | >= 5.0 |
 
 ## Providers
 
@@ -68,6 +100,7 @@ No modules.
 | [aws_ec2_client_vpn_endpoint.client_vpn](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/ec2_client_vpn_endpoint) | resource |
 | [aws_ec2_client_vpn_network_association.client_vpn](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/ec2_client_vpn_network_association) | resource |
 | [aws_ec2_client_vpn_route.client_vpn](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/ec2_client_vpn_route) | resource |
+| [aws_ec2_transit_gateway_route.s2s](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/ec2_transit_gateway_route) | resource |
 | [aws_ec2_transit_gateway_route_table_association.s2s](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/ec2_transit_gateway_route_table_association) | resource |
 | [aws_ec2_transit_gateway_route_table_propagation.s2s](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/ec2_transit_gateway_route_table_propagation) | resource |
 | [aws_route.route](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/route) | resource |
@@ -89,7 +122,7 @@ No modules.
 | <a name="input_client_certificate_arn"></a> [client\_certificate\_arn](#input\_client\_certificate\_arn) | The ARN of the ACM client certificate | `string` | `null` | no |
 | <a name="input_client_cidr_block"></a> [client\_cidr\_block](#input\_client\_cidr\_block) | The IPv4 address range, in CIDR notation, from which to assign client IP addresses. | `string` | `null` | no |
 | <a name="input_customer_ip"></a> [customer\_ip](#input\_customer\_ip) | The IPv4 address for the customer gateway device's outside interface. | `string` | `null` | no |
-| <a name="input_destination_cidr_block"></a> [destination\_cidr\_block](#input\_destination\_cidr\_block) | The CIDR block associated with the local subnet of the customer network | `list(string)` | `null` | no |
+| <a name="input_destination_cidr_block"></a> [destination\_cidr\_block](#input\_destination\_cidr\_block) | Remote network CIDRs. Used for static VPN routes; ignored when BGP is enabled. | `list(string)` | `[]` | no |
 | <a name="input_dns_servers"></a> [dns\_servers](#input\_dns\_servers) | Information about the DNS servers to be used for DNS resolution. A Client VPN endpoint can have up to two DNS servers. If no DNS server is specified, the DNS address of the connecting device is used. | `list(string)` | `null` | no |
 | <a name="input_enable_transit_gateway_route_propagation"></a> [enable\_transit\_gateway\_route\_propagation](#input\_enable\_transit\_gateway\_route\_propagation) | Propagate routes learned by the VPN attachment into the Transit Gateway route table. | `bool` | `false` | no |
 | <a name="input_name"></a> [name](#input\_name) | Naming for the resources in the console | `string` | n/a | yes |
@@ -102,7 +135,7 @@ No modules.
 | <a name="input_transit_gateway_route_table_id"></a> [transit\_gateway\_route\_table\_id](#input\_transit\_gateway\_route\_table\_id) | Transit Gateway route table to associate with the VPN attachment. | `string` | `null` | no |
 | <a name="input_tunnel_type"></a> [tunnel\_type](#input\_tunnel\_type) | The type of customer gateway. The only type AWS supports at this time is "ipsec.1" | `string` | `"ipsec.1"` | no |
 | <a name="input_vpc_id"></a> [vpc\_id](#input\_vpc\_id) | The ID of the VPC to associate with the Client VPN endpoint. | `string` | `null` | no |
-| <a name="input_vpn_type"></a> [vpn\_type](#input\_vpn\_type) | Select VPN type: client\_endpoint or site\_to\_site | `any` | n/a | yes |
+| <a name="input_vpn_type"></a> [vpn\_type](#input\_vpn\_type) | Select VPN type: client\_endpoint or site\_to\_site | `string` | n/a | yes |
 
 ## Outputs
 

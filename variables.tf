@@ -77,8 +77,8 @@ variable "s2s_vpc_id" {
 }
 
 variable "destination_cidr_block" {
-  description = "The CIDR block associated with the local subnet of the customer network"
-  default     = null
+  description = "Remote network CIDRs. Used for static VPN routes; ignored when BGP is enabled."
+  default     = []
   type        = list(string)
 }
 

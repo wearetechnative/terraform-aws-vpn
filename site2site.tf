@@ -29,7 +29,7 @@ resource "aws_vpn_connection" "s2s" {
 }
 
 resource "aws_vpn_connection_route" "s2s" {
-  count                  = var.vpn_type == "site_to_site" && var.static_routes_only ? length(var.destination_cidr_block) : 0
+  count                  = var.vpn_type == "site_to_site" && var.transit_gateway_id == null && var.static_routes_only ? length(var.destination_cidr_block) : 0
   destination_cidr_block = var.destination_cidr_block[count.index]
   vpn_connection_id      = aws_vpn_connection.s2s[0].id
 }
@@ -75,8 +75,18 @@ resource "aws_ec2_transit_gateway_route_table_association" "s2s" {
 }
 
 resource "aws_ec2_transit_gateway_route_table_propagation" "s2s" {
-  count = var.vpn_type == "site_to_site" && var.transit_gateway_id != null && var.transit_gateway_route_table_id != null && var.enable_transit_gateway_route_propagation ? 1 : 0
+  count = var.vpn_type == "site_to_site" && var.transit_gateway_id != null && var.transit_gateway_route_table_id != null && !var.static_routes_only && var.enable_transit_gateway_route_propagation ? 1 : 0
 
+  transit_gateway_attachment_id  = aws_vpn_connection.s2s[0].transit_gateway_attachment_id
+  transit_gateway_route_table_id = var.transit_gateway_route_table_id
+
+  depends_on = [aws_ec2_transit_gateway_route_table_association.s2s]
+}
+
+resource "aws_ec2_transit_gateway_route" "s2s" {
+  count = var.vpn_type == "site_to_site" && var.transit_gateway_id != null && var.transit_gateway_route_table_id != null && var.static_routes_only ? length(var.destination_cidr_block) : 0
+
+  destination_cidr_block         = var.destination_cidr_block[count.index]
   transit_gateway_attachment_id  = aws_vpn_connection.s2s[0].transit_gateway_attachment_id
   transit_gateway_route_table_id = var.transit_gateway_route_table_id
 
