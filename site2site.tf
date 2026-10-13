@@ -26,6 +26,42 @@ resource "aws_vpn_connection" "s2s" {
   tags = {
     Name = var.name
   }
+
+  # Tunnel settings are coordinated with the remote VPN administrator and may
+  # be changed outside Terraform. In particular, Azure uses one shared key for
+  # both AWS tunnels. Do not reset those settings during unrelated applies.
+  lifecycle {
+    ignore_changes = [
+      tunnel1_preshared_key,
+      tunnel1_ike_versions,
+      tunnel1_phase1_dh_group_numbers,
+      tunnel1_phase1_encryption_algorithms,
+      tunnel1_phase1_integrity_algorithms,
+      tunnel1_phase1_lifetime_seconds,
+      tunnel1_phase2_dh_group_numbers,
+      tunnel1_phase2_encryption_algorithms,
+      tunnel1_phase2_integrity_algorithms,
+      tunnel1_phase2_lifetime_seconds,
+      tunnel1_rekey_fuzz_percentage,
+      tunnel1_rekey_margin_time_seconds,
+      tunnel1_replay_window_size,
+      tunnel1_startup_action,
+      tunnel2_preshared_key,
+      tunnel2_ike_versions,
+      tunnel2_phase1_dh_group_numbers,
+      tunnel2_phase1_encryption_algorithms,
+      tunnel2_phase1_integrity_algorithms,
+      tunnel2_phase1_lifetime_seconds,
+      tunnel2_phase2_dh_group_numbers,
+      tunnel2_phase2_encryption_algorithms,
+      tunnel2_phase2_integrity_algorithms,
+      tunnel2_phase2_lifetime_seconds,
+      tunnel2_rekey_fuzz_percentage,
+      tunnel2_rekey_margin_time_seconds,
+      tunnel2_replay_window_size,
+      tunnel2_startup_action,
+    ]
+  }
 }
 
 resource "aws_vpn_connection_route" "s2s" {
