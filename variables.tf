@@ -111,3 +111,69 @@ variable "dns_servers" {
   type        = list(string)
   default     = null
 }
+
+variable "local_ipv4_network_cidr" {
+  description = "IPv4 CIDR on the AWS side of the site-to-site VPN connection (IPsec traffic selector). Defaults to 0.0.0.0/0."
+  type        = string
+  default     = null
+}
+
+variable "remote_ipv4_network_cidr" {
+  description = "IPv4 CIDR on the customer side of the site-to-site VPN connection (IPsec traffic selector). Defaults to 0.0.0.0/0."
+  type        = string
+  default     = null
+}
+
+variable "tunnel1_config" {
+  description = "IPsec options for tunnel 1 of the site-to-site VPN connection. Any attribute left unset uses the AWS default."
+  type = object({
+    preshared_key = optional(string)
+    ike_versions  = optional(list(string))
+
+    phase1_encryption_algorithms = optional(list(string))
+    phase1_integrity_algorithms  = optional(list(string))
+    phase1_dh_group_numbers      = optional(list(number))
+    phase1_lifetime_seconds      = optional(number)
+
+    phase2_encryption_algorithms = optional(list(string))
+    phase2_integrity_algorithms  = optional(list(string))
+    phase2_dh_group_numbers      = optional(list(number))
+    phase2_lifetime_seconds      = optional(number)
+
+    dpd_timeout_action  = optional(string)
+    dpd_timeout_seconds = optional(number)
+    startup_action      = optional(string)
+
+    local_ipv4_network_cidr = optional(string)
+    inside_cidr             = optional(string)
+  })
+  default  = {}
+  nullable = false
+}
+
+variable "tunnel2_config" {
+  description = "IPsec options for tunnel 2 of the site-to-site VPN connection. Any attribute left unset uses the AWS default."
+  type = object({
+    preshared_key = optional(string)
+    ike_versions  = optional(list(string))
+
+    phase1_encryption_algorithms = optional(list(string))
+    phase1_integrity_algorithms  = optional(list(string))
+    phase1_dh_group_numbers      = optional(list(number))
+    phase1_lifetime_seconds      = optional(number)
+
+    phase2_encryption_algorithms = optional(list(string))
+    phase2_integrity_algorithms  = optional(list(string))
+    phase2_dh_group_numbers      = optional(list(number))
+    phase2_lifetime_seconds      = optional(number)
+
+    dpd_timeout_action  = optional(string)
+    dpd_timeout_seconds = optional(number)
+    startup_action      = optional(string)
+
+    local_ipv4_network_cidr = optional(string)
+    inside_cidr             = optional(string)
+  })
+  default  = {}
+  nullable = false
+}

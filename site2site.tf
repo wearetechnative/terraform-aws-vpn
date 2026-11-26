@@ -17,12 +17,44 @@ resource "aws_vpn_gateway" "s2s" {
 }
 
 resource "aws_vpn_connection" "s2s" {
-  count               = var.vpn_type == "site_to_site" ? 1 : 0
-  vpn_gateway_id      = var.transit_gateway_id == null ? aws_vpn_gateway.s2s[count.index].id : null
-  transit_gateway_id  = var.transit_gateway_id
-  customer_gateway_id = aws_customer_gateway.s2s[count.index].id
-  type                = var.tunnel_type
-  static_routes_only  = var.static_routes_only
+  count                    = var.vpn_type == "site_to_site" ? 1 : 0
+  vpn_gateway_id           = var.transit_gateway_id == null ? aws_vpn_gateway.s2s[count.index].id : null
+  transit_gateway_id       = var.transit_gateway_id
+  customer_gateway_id      = aws_customer_gateway.s2s[count.index].id
+  type                     = var.tunnel_type
+  static_routes_only       = var.static_routes_only
+  local_ipv4_network_cidr  = var.local_ipv4_network_cidr
+  remote_ipv4_network_cidr = var.remote_ipv4_network_cidr
+
+  tunnel1_preshared_key                = var.tunnel1_config.preshared_key
+  tunnel1_ike_versions                 = var.tunnel1_config.ike_versions
+  tunnel1_phase1_encryption_algorithms = var.tunnel1_config.phase1_encryption_algorithms
+  tunnel1_phase1_integrity_algorithms  = var.tunnel1_config.phase1_integrity_algorithms
+  tunnel1_phase1_dh_group_numbers      = var.tunnel1_config.phase1_dh_group_numbers
+  tunnel1_phase1_lifetime_seconds      = var.tunnel1_config.phase1_lifetime_seconds
+  tunnel1_phase2_encryption_algorithms = var.tunnel1_config.phase2_encryption_algorithms
+  tunnel1_phase2_integrity_algorithms  = var.tunnel1_config.phase2_integrity_algorithms
+  tunnel1_phase2_dh_group_numbers      = var.tunnel1_config.phase2_dh_group_numbers
+  tunnel1_phase2_lifetime_seconds      = var.tunnel1_config.phase2_lifetime_seconds
+  tunnel1_dpd_timeout_action           = var.tunnel1_config.dpd_timeout_action
+  tunnel1_dpd_timeout_seconds          = var.tunnel1_config.dpd_timeout_seconds
+  tunnel1_startup_action               = var.tunnel1_config.startup_action
+  tunnel1_inside_cidr                  = var.tunnel1_config.inside_cidr
+
+  tunnel2_preshared_key                = var.tunnel2_config.preshared_key
+  tunnel2_ike_versions                 = var.tunnel2_config.ike_versions
+  tunnel2_phase1_encryption_algorithms = var.tunnel2_config.phase1_encryption_algorithms
+  tunnel2_phase1_integrity_algorithms  = var.tunnel2_config.phase1_integrity_algorithms
+  tunnel2_phase1_dh_group_numbers      = var.tunnel2_config.phase1_dh_group_numbers
+  tunnel2_phase1_lifetime_seconds      = var.tunnel2_config.phase1_lifetime_seconds
+  tunnel2_phase2_encryption_algorithms = var.tunnel2_config.phase2_encryption_algorithms
+  tunnel2_phase2_integrity_algorithms  = var.tunnel2_config.phase2_integrity_algorithms
+  tunnel2_phase2_dh_group_numbers      = var.tunnel2_config.phase2_dh_group_numbers
+  tunnel2_phase2_lifetime_seconds      = var.tunnel2_config.phase2_lifetime_seconds
+  tunnel2_dpd_timeout_action           = var.tunnel2_config.dpd_timeout_action
+  tunnel2_dpd_timeout_seconds          = var.tunnel2_config.dpd_timeout_seconds
+  tunnel2_startup_action               = var.tunnel2_config.startup_action
+  tunnel2_inside_cidr                  = var.tunnel2_config.inside_cidr
   tags = {
     Name = var.name
   }
